@@ -810,6 +810,11 @@ osg::Object* InputStream::readObject( osg::Object* existingObj )
 
 osg::Object* InputStream::readObjectFields( const std::string& className, unsigned int id, osg::Object* existingObj )
 {
+    if (className == "osg::NullObject")
+    {
+        return NULL;
+    }
+    
     ObjectWrapper* wrapper = Registry::instance()->getObjectWrapperManager()->findWrapper( className );
     if ( !wrapper )
     {
