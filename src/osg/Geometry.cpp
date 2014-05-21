@@ -443,7 +443,7 @@ bool Geometry::getDrawElementsList(DrawElementsList& drawElementsList) const
 
 void Geometry::addVertexBufferObjectIfRequired(osg::Array* array)
 {
-    if (_useVertexBufferObjects)
+    if (array && _useVertexBufferObjects)
     {
         if (!array->getVertexBufferObject())
         {

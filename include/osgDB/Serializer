@@ -548,7 +548,10 @@ public:
         if ( os.isBinary() )
         {
             os << hasObject;
-            os.writeObject( value );
+            if ( hasObject )
+            {
+                os.writeObject( value );
+            }
         }
         else if ( ParentType::_defaultValue!=value )
         {
