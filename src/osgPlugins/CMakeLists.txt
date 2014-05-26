@@ -293,7 +293,7 @@ IF(ZEROCONF_FOUND)
 ENDIF()
 
 IF(CITYGML_FOUND)
-	ADD_SUBDIRECTORY(citygml)
+    ADD_SUBDIRECTORY(citygml)
 ENDIF(CITYGML_FOUND)
 
 ##########to get all the variables of Cmake
