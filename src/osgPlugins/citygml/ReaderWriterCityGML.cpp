@@ -28,7 +28,7 @@
 #include <osgDB/FileUtils>
 #include <osgDB/FileNameUtils>
 
-#include "citygml.h"
+#include <citygml/citygml.h>
 
 #include <algorithm>
 #include <cctype> 
