@@ -48,8 +48,8 @@ PROJECT(OpenSceneGraph)
 
 SET(OPENSCENEGRAPH_MAJOR_VERSION 3)
 SET(OPENSCENEGRAPH_MINOR_VERSION 3)
-SET(OPENSCENEGRAPH_PATCH_VERSION 2)
-SET(OPENSCENEGRAPH_SOVERSION 112)
+SET(OPENSCENEGRAPH_PATCH_VERSION 3)
+SET(OPENSCENEGRAPH_SOVERSION 115)
 
 # set to 0 when not a release candidate, non zero means that any generated
 # svn tags will be treated as release candidates of given number
@@ -540,7 +540,7 @@ IF (OSG_GL3_AVAILABLE)
 
     ENDIF()
 ELSEIF(OSG_GLES1_AVAILABLE)
-    IF (APPLE)
+    IF (APPLE AND NOT ANDROID)
         SET(OPENGL_HEADER1 "#include \"TargetConditionals.h\"" CACHE STRING "#include<> line for OpenGL Header")
         SET(OPENGL_HEADER2 "#include <OpenGLES/ES1/gl.h>" CACHE STRING "#include<> line for additional OpenGL Headers if required")
     ELSE()
@@ -548,7 +548,7 @@ ELSEIF(OSG_GLES1_AVAILABLE)
         SET(OPENGL_HEADER2 "" CACHE STRING "#include<> line for additional OpenGL Headers if required")
     ENDIF()
 ELSEIF(OSG_GLES2_AVAILABLE)
-    IF (APPLE)
+    IF (APPLE AND NOT ANDROID)
         SET(OPENGL_HEADER1 "#include \"TargetConditionals.h\"" CACHE STRING "#include<> line for OpenGL Header")
         SET(OPENGL_HEADER2 "#include <OpenGLES/ES2/gl.h>" CACHE STRING "#include<> line for additional OpenGL Headers if required")
     ELSE()

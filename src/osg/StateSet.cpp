@@ -84,6 +84,26 @@ bool osg::isTextureMode(StateAttribute::GLMode mode)
     return getTextureGLModeSet().isTextureMode(mode);
 }
 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// StateAttributeCallback
+//
+bool StateSet::Callback::run(osg::Object* object, osg::Object* data)
+{
+    osg::StateSet* ss = dynamic_cast<osg::StateSet*>(object);
+    osg::NodeVisitor* nv = dynamic_cast<osg::NodeVisitor*>(data);
+    if (ss && nv)
+    {
+        operator()(ss, nv);
+        return true;
+    }
+    else
+    {
+        return traverse(object, data);
+    }
+}
+
 StateSet::StateSet():
     Object(true),
     _nestRenderBins(true)
@@ -253,7 +273,7 @@ void StateSet::computeDataVariance()
 }
 
 
-void StateSet::addParent(osg::Object* object)
+void StateSet::addParent(osg::Node* object)
 {
     // OSG_DEBUG_FP<<"Adding parent"<<std::endl;
     OpenThreads::ScopedPointerLock<OpenThreads::Mutex> lock(getRefMutex());
@@ -261,7 +281,7 @@ void StateSet::addParent(osg::Object* object)
     _parents.push_back(object);
 }
 
-void StateSet::removeParent(osg::Object* object)
+void StateSet::removeParent(osg::Node* object)
 {
     OpenThreads::ScopedPointerLock<OpenThreads::Mutex> lock(getRefMutex());
 

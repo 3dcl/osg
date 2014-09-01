@@ -40,6 +40,7 @@ class SampleDensityProperty;
 class SampleDensityWhenMovingProperty;
 class TransparencyProperty;
 class ExteriorTransparencyFactorProperty;
+class VolumeSettings;
 
 class OSGVOLUME_EXPORT PropertyVisitor
 {
@@ -49,24 +50,24 @@ class OSGVOLUME_EXPORT PropertyVisitor
 
         virtual ~PropertyVisitor() {}
 
-        virtual void apply(Property&) {}
+        virtual void apply(Property&);
         virtual void apply(CompositeProperty&);
         virtual void apply(SwitchProperty&);
-        virtual void apply(TransferFunctionProperty&) {}
-        virtual void apply(ScalarProperty&) {}
-        virtual void apply(IsoSurfaceProperty&) {}
-        virtual void apply(AlphaFuncProperty&) {}
-        virtual void apply(MaximumIntensityProjectionProperty&) {}
-        virtual void apply(LightingProperty&) {}
-        virtual void apply(SampleRatioProperty&) {}
-        virtual void apply(SampleRatioWhenMovingProperty&) {}
-        virtual void apply(SampleDensityProperty&) {}
-        virtual void apply(SampleDensityWhenMovingProperty&) {}
-        virtual void apply(TransparencyProperty&) {}
-        virtual void apply(ExteriorTransparencyFactorProperty&) {}
+        virtual void apply(TransferFunctionProperty&);
+        virtual void apply(ScalarProperty&);
+        virtual void apply(IsoSurfaceProperty&);
+        virtual void apply(AlphaFuncProperty&);
+        virtual void apply(MaximumIntensityProjectionProperty&);
+        virtual void apply(LightingProperty&);
+        virtual void apply(SampleRatioProperty&);
+        virtual void apply(SampleRatioWhenMovingProperty&);
+        virtual void apply(SampleDensityProperty&);
+        virtual void apply(SampleDensityWhenMovingProperty&);
+        virtual void apply(TransparencyProperty&);
+        virtual void apply(ExteriorTransparencyFactorProperty&);
+        virtual void apply(VolumeSettings&);
 
         bool _traverseOnlyActiveChildren;
-
 };
 
 
@@ -81,11 +82,19 @@ class OSGVOLUME_EXPORT Property : public osg::Object
 
         META_Object(osgVolume, Property);
 
+        void dirty() { ++_modifiedCount; }
+
+        void setModifiedCount(unsigned int c) { _modifiedCount = c; }
+        unsigned int getModifiedCount() const { return _modifiedCount; }
+
         virtual void accept(PropertyVisitor& pv) { pv.apply(*this); }
+        virtual void traverse(PropertyVisitor& pv) {}
 
     protected:
 
         virtual ~Property();
+
+        unsigned int _modifiedCount;
 };
 
 class OSGVOLUME_EXPORT CompositeProperty : public Property
@@ -101,6 +110,16 @@ class OSGVOLUME_EXPORT CompositeProperty : public Property
 
         virtual void accept(PropertyVisitor& pv) { pv.apply(*this); }
 
+        virtual void traverse(PropertyVisitor& pv)
+        {
+            for(Properties::iterator itr = _properties.begin();
+                itr != _properties.end();
+                ++itr)
+            {
+                (*itr)->accept(pv);
+            }
+        }
+
         void clear();
 
         typedef std::vector< osg::ref_ptr<Property> > Properties;
@@ -111,7 +130,7 @@ class OSGVOLUME_EXPORT CompositeProperty : public Property
 
         const Property* getProperty(unsigned int i) const { return i<_properties.size() ? _properties[i].get() : 0; }
 
-        void addProperty(Property* property) { _properties.push_back(property); }
+        void addProperty(Property* property) { _properties.push_back(property); dirty(); }
 
         void removeProperty(unsigned int i) { _properties.erase(_properties.begin()+i); }
 
@@ -139,9 +158,25 @@ class OSGVOLUME_EXPORT SwitchProperty : public CompositeProperty
 
         virtual void accept(PropertyVisitor& pv) { pv.apply(*this); }
 
+        virtual void traverse(PropertyVisitor& pv)
+        {
+            if (pv._traverseOnlyActiveChildren)
+            {
+                if (_activeProperty>=0 && static_cast<unsigned int>(_activeProperty)<=getNumProperties())
+                {
+                    _properties[_activeProperty]->accept(pv);
+                }
+            }
+            else
+            {
+                CompositeProperty::traverse(pv);
+            }
+        }
+
+
         /** Set which child property is active.
           * -1 disables all children.*/
-        void setActiveProperty(int i) { _activeProperty = i; }
+        void setActiveProperty(int i) { _activeProperty = i; dirty(); }
 
         /** Get the active property.*/
         int getActiveProperty() const { return _activeProperty; }
@@ -197,7 +232,7 @@ class OSGVOLUME_EXPORT ScalarProperty : public Property
         virtual void accept(PropertyVisitor& pv) { pv.apply(*this); }
 
         /** Set the value.*/
-        virtual void setValue(float v) { _uniform->set(v); }
+        virtual void setValue(float v) { _uniform->set(v); dirty(); }
 
         /** Get the value.*/
         float getValue() const { float v; _uniform->get(v); return v; }
@@ -411,7 +446,6 @@ class OSGVOLUME_EXPORT CollectPropertiesVisitor : public osgVolume::PropertyVisi
 
         CollectPropertiesVisitor(bool traverseOnlyActiveChildren=true);
 
-        virtual void apply(Property&);
         virtual void apply(TransferFunctionProperty&);
         virtual void apply(ScalarProperty&);
         virtual void apply(IsoSurfaceProperty& iso);
@@ -447,7 +481,9 @@ class OSGVOLUME_EXPORT PropertyAdjustmentCallback : public osgGA::GUIEventHandle
 
         PropertyAdjustmentCallback(const PropertyAdjustmentCallback&,const osg::CopyOp&);
 
-        META_Object(osgVolume,PropertyAdjustmentCallback);
+        META_Object(osgVolume, PropertyAdjustmentCallback);
+
+        virtual bool run(osg::Object* object, osg::Object* data) { return osgGA::GUIEventHandler::run(object, data); }
 
         void setKeyEventCycleForward(int key) { _cyleForwardKey = key; }
         int getKeyEventCycleForward() const { return _cyleForwardKey; }
