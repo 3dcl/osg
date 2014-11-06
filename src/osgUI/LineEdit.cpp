@@ -166,7 +166,7 @@ void LineEdit::createGraphicsImplementation()
     // clear background of edit region
     _backgroundSwitch = new osg::Switch;
     _backgroundSwitch->addChild(style->createPanel(extents, osg::Vec4(unFocused, unFocused,unFocused, 1.0)));
-    _backgroundSwitch->addChild(style->createPanel(extents, osg::Vec4(withFocus,withFocus,withFocus,1.0)));
+    _backgroundSwitch->addChild(style->createPanel(extents, osg::Vec4(withFocus, withFocus, withFocus,1.0)));
     _backgroundSwitch->setSingleChildOn(0);
     group->addChild(_backgroundSwitch.get());
 
@@ -175,7 +175,7 @@ void LineEdit::createGraphicsImplementation()
     _textDrawable->setDataVariance(osg::Object::DYNAMIC);
     group->addChild(node.get());
 
-    style->setupClipStateSet(_extents, getOrCreateStateSet());
+    style->setupClipStateSet(_extents, getOrCreateWidgetStateSet());
 
     setGraphicsSubgraph(0, group.get());
 }
