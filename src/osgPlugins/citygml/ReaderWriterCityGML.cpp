@@ -40,6 +40,7 @@ public:
 	ReaderWriterCityGML( void )
 	{ 
 		supportsExtension( "citygml", "CityGML format" );
+        supportsExtension( "gml", "CityGML format" );
 
 		supportsOption( "names", "Add the name of the city objects on top of them" );
 		supportsOption( "mask", "Set the objects mask" );
@@ -49,6 +50,7 @@ public:
 		supportsOption( "pruneEmptyObjects", "Prune empty objects (ie. without -supported- geometry)" );
 		supportsOption( "destSRS", "Transform geometry to given reference system" );
         supportsOption( "useMaxLODonly", "Use the highest available LOD for geometry of one object" );
+        supportsOption( "appearanceTheme", "Name of the appearance theme to use" );
 	}
 
 	virtual const char* className( void ) const { return "CityGML Reader"; }
@@ -60,9 +62,13 @@ private:
 	class Settings 
 	{
 	public:
-		Settings( void ) : _printNames( false ),
-			_first(true), _origin( 0.f, 0.f, 0.f ),
-             _useMaxLODOnly(false){}
+        Settings( void )
+            : _printNames(false)
+            , _first(true)
+            , _origin( 0.f, 0.f, 0.f )
+            , _useMaxLODOnly(false)
+
+        {}
 
 		void parseOptions( const osgDB::ReaderWriter::Options* options)
 		{
@@ -79,6 +85,7 @@ private:
 				else if ( currentOption == "optimize" ) _params.optimize = true;
 				else if ( currentOption == "pruneemptyobjects" ) _params.pruneEmptyObjects = true;		
                 else if ( currentOption == "usemaxlodonly" ) _useMaxLODOnly = true;		
+                else if ( currentOption == "appearancetheme") iss >> _params.theme;
 			}
 		}
 
