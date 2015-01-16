@@ -51,6 +51,12 @@ SET(OPENSCENEGRAPH_MINOR_VERSION 3)
 SET(OPENSCENEGRAPH_PATCH_VERSION 3)
 SET(OPENSCENEGRAPH_SOVERSION 115)
 
+SET(OSG_PACKAGE_MAINTAINER
+    "Jon Doe <jon.doe@superawesomemail.com>"
+    CACHE STRING
+    "Name and mail adress of the package maintainer(e.g. for debian packages)"
+)
+
 # set to 0 when not a release candidate, non zero means that any generated
 # svn tags will be treated as release candidates of given number
 SET(OPENSCENEGRAPH_RELEASE_CANDIDATE 0)
