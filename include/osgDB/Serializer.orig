@@ -589,7 +589,11 @@ public:
         if ( os.isBinary() )
         {
             os << hasObject;
+<<<<<<< HEAD
+            if (hasObject)
+=======
             if ( hasObject )
+>>>>>>> 6df77dd8c4cba8c3f4fc3e7eece5055ef6ad39f9
             {
                 os.writeObject( value );
             }

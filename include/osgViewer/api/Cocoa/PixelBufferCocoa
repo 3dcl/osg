@@ -62,7 +62,7 @@ class OSGVIEWER_EXPORT PixelBufferCocoa : public osg::GraphicsContext, public os
     
         virtual bool isSameKindAs(const Object* object) const { return dynamic_cast<const PixelBufferCocoa*>(object)!=0; }
         virtual const char* libraryName() const { return "osgViewer"; }
-        virtual const char* className() const { return "PixelBufferCarbon"; }
+        virtual const char* className() const { return "PixelBufferCocoa"; }
 
         virtual bool valid() const { return _valid; }
 

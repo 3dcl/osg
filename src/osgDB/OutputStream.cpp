@@ -604,14 +604,17 @@ void OutputStream::writeImage( const osg::Image* img )
 
 void OutputStream::writeObject( const osg::Object* obj )
 {
+    std::string name;
     if ( !obj )
     {
         *this << std::string("NULL") << std::endl;  // Write NULL token.
         return;
     }
-
-    std::string name = obj->libraryName();
-    name += std::string("::") + obj->className();
+    else 
+    {
+        name = obj->libraryName();
+        name += std::string("::") + obj->className();
+    }    
 
     bool newID = false;
     unsigned int id = findOrCreateObjectID( obj, newID );
@@ -620,7 +623,7 @@ void OutputStream::writeObject( const osg::Object* obj )
     *this << PROPERTY("UniqueID") << id << std::endl;  // Write object ID
     if ( getException() ) return;
 
-    if (newID)
+    if (newID && obj)
     {
         writeObjectFields(obj);
     }

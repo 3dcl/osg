@@ -373,6 +373,7 @@ size_t Thread::getStackSize()
 //
 int Thread::setProcessorAffinity(unsigned int cpunum)
 {
+    return -1;
     QtThreadPrivateData* pd = static_cast<QtThreadPrivateData*>(_prvData);
     pd->cpunum = cpunum;
     if (!pd->isRunning) return 0;

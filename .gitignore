@@ -1,0 +1,7 @@
+build_phone
+build_simulator
+build_mac
+build_debug
+buildRelease
+build
+CMakeLists.txt.user*

@@ -56,6 +56,12 @@ SET(OPENSCENEGRAPH_MINOR_VERSION 3)
 SET(OPENSCENEGRAPH_PATCH_VERSION 7)
 SET(OPENSCENEGRAPH_SOVERSION 120)
 
+SET(OSG_PACKAGE_MAINTAINER
+    "Jon Doe <jon.doe@superawesomemail.com>"
+    CACHE STRING
+    "Name and mail adress of the package maintainer(e.g. for debian packages)"
+)
+
 # set to 0 when not a release candidate, non zero means that any generated
 # svn tags will be treated as release candidates of given number
 SET(OPENSCENEGRAPH_RELEASE_CANDIDATE 0)
@@ -656,6 +662,7 @@ ELSE()
     FIND_PACKAGE(GtkGl)
     FIND_PACKAGE(DirectInput)
     FIND_PACKAGE(NVTT)
+    FIND_PACKAGE(CityGML)
     IF (NOT WIN32)
         FIND_PACKAGE(Asio)
     ENDIF()
@@ -823,7 +830,7 @@ ENDIF()
 
 IF(UNIX AND NOT WIN32 AND NOT APPLE)
   IF(CMAKE_SIZEOF_VOID_P MATCHES "8")
-      SET(LIB_POSTFIX "64" CACHE STRING "suffix for 32/64 dir placement")
+      SET(LIB_POSTFIX "" CACHE STRING "suffix for 32/64 dir placement")
       MARK_AS_ADVANCED(LIB_POSTFIX)
   ENDIF()
 ENDIF()
